@@ -37,12 +37,16 @@ fun printField(field: Field) {
 enum class CellState {
     EMPTY, CROSS, NOUGHT;
 
+    companion object {}
+
     override fun toString(): String = when(this) {
         EMPTY -> "_"
         CROSS -> "X"
         NOUGHT -> "0"
     }
 }
+
+val CellState.Companion.rnd get() = CellState.entries.random()
 
 
 enum class GameState {
