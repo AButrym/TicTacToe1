@@ -20,6 +20,16 @@ class CliTest {
         // Assert
         assertSame(expected, res)
     }
+    @Test
+    fun `gameState shows win for main diagonal filled with crosses`() {
+        // Arrange
+        val field = "X00|_X_|__X".toField()
+        val expected = GameState.CROSS_WIN
+        // Act
+        val res = field.gameState
+        // Assert
+        assertSame(expected, res)
+    }
 
     @Test
     fun `when there is a single cross on the field then next player should be nought`() {

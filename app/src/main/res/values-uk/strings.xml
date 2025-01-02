@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Хрестики-Нолики</string>
+    <string name="tictactoe_game_title">Гра Хрестики-Нолики</string>
+    <string name="reset">Скинути</string>
+</resources>

@@ -48,6 +48,7 @@ enum class CellState {
 
 val CellState.Companion.rnd get() = CellState.entries.random()
 
+val emptyField = "___|___|___".toField()
 
 enum class GameState {
     IN_PROGRESS, CROSS_WIN, NOUGHT_WIN, DRAW, ILLEGAL
@@ -103,7 +104,9 @@ val Field.nextPlayer: Player get() {
 }
 
 fun Field.click(row: Int, col: Int): Field {
-    if (this[ix(row, col)] != CellState.EMPTY) return this
+    if (this[ix(row, col)] != CellState.EMPTY || gameState != IN_PROGRESS) {
+        return this
+    }
     val res = this.toMutableList()
     res[ix(row, col)] = nextPlayer.mark
     return res
