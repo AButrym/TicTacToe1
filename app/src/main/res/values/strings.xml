@@ -2,4 +2,7 @@
     <string name="app_name">TicTacToe</string>
     <string name="tictactoe_game_title">TicTacToe Game</string>
     <string name="reset">Reset</string>
+    <string name="cross_wins">Cross Wins</string>
+    <string name="nought_wins">Nought wins</string>
+    <string name="draw">Draw!</string>
 </resources>

@@ -3,4 +3,7 @@
     <string name="app_name">Хрестики-Нолики</string>
     <string name="tictactoe_game_title">Гра Хрестики-Нолики</string>
     <string name="reset">Скинути</string>
+    <string name="cross_wins">Хрестики перемагають</string>
+    <string name="nought_wins">Нолики перемагають</string>
+    <string name="draw">Нічия!</string>
 </resources>
