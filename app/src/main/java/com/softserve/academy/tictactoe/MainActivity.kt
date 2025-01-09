@@ -164,6 +164,7 @@ fun GridPreview() {
 fun MainScreenPreviewUK() {
     MainScreen()
 }
+
 //@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
