@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -99,7 +100,10 @@ fun MainScreen(field: Field,
             onClick = onReset
         )
         if (gameState != GameState.IN_PROGRESS) {
-            WinBanner(gameState, modifier = Modifier.align(Alignment.Center))
+            WinBanner(gameState, modifier = Modifier
+                .align(Alignment.Center)
+                .clickable { onReset() }
+            )
         }
     }
 }
@@ -212,7 +216,7 @@ fun MainScreenPreviewUK() {
         gameState = GameState.CROSS_WIN)
 }
 
-//@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true)
+@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
     StateHolder()

@@ -2,6 +2,7 @@ package com.softserve.academy.tictactoe.demo
 
 fun main() {
     try {
+        listOf<Number>(1, 2)
         println("Start")
         foo()
         println("Middle")
