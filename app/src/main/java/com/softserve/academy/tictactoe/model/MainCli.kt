@@ -67,21 +67,22 @@ val Player.mark get() = when(this) {
     Player.NOUGHT -> CellState.NOUGHT
 }
 
+private val lines = arrayOf(
+    arrayOf(0, 1, 2),
+    arrayOf(3, 4, 5),
+    arrayOf(6, 7, 8),
+    arrayOf(0, 3, 6),
+    arrayOf(1, 4, 7),
+    arrayOf(2, 5, 8),
+    arrayOf(0, 4, 8),
+    arrayOf(2, 4, 6),
+)
+
 //fun gameState(field: Field): GameState
 val Field.gameState: GameState get() {
     // 0 1 2
     // 3 4 5
     // 6 7 8
-    val lines = arrayOf(
-        arrayOf(0, 1, 2),
-        arrayOf(3, 4, 5),
-        arrayOf(6, 7, 8),
-        arrayOf(0, 3, 6),
-        arrayOf(1, 4, 7),
-        arrayOf(2, 5, 8),
-        arrayOf(0, 4, 8),
-        arrayOf(2, 4, 6),
-    )
     val nX = this.count { it == CellState.CROSS }
     val n0 = this.count { it == CellState.NOUGHT }
     if ((nX == n0 || nX == n0 + 1).not()) {
