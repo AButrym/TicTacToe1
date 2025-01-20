@@ -26,6 +26,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.softserve.academy.tictactoe.TicTacToeAction.*
 import com.softserve.academy.tictactoe.model.CellState
 import com.softserve.academy.tictactoe.model.Field
 import com.softserve.academy.tictactoe.model.GameState
@@ -60,23 +64,34 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Model-View-Intent
+sealed interface TicTacToeAction {
+    data object ResetAction : TicTacToeAction
+    data class CellClickAction(val iRow: Int, val iCol: Int) : TicTacToeAction
+}
+
+typealias ActionCallback = (TicTacToeAction) -> Unit
+
+
+class TicTacToeViewModel() : ViewModel() {
+    var field by mutableStateOf(emptyField)
+    val gameState by derivedStateOf { field.gameState }
+
+    fun onAction(action: TicTacToeAction) {
+        when (action) {
+            is ResetAction -> {
+                field = emptyField
+            }
+            is CellClickAction ->
+                with(action) { field = field.click(iRow, iCol) }
+        }
+    }
+}
 
 @Composable
-fun StateHolder(modifier: Modifier = Modifier) {
-    var field by remember { mutableStateOf(emptyField) }
-    val gameState by remember { derivedStateOf { field.gameState } }
-
-    fun onCellClick(iRow: Int, iCol: Int) {
-        field = field.click(iRow, iCol)
-    }
-
-    fun onReset() {
-        field = emptyField
-    }
-
-    MainScreen(field, gameState, modifier,
-        ::onCellClick,
-        ::onReset
+fun StateHolder(modifier: Modifier = Modifier, model: TicTacToeViewModel = viewModel()) {
+    MainScreen(model.field, model.gameState, modifier,
+        model::onAction
     )
 }
 
@@ -84,8 +99,7 @@ fun StateHolder(modifier: Modifier = Modifier) {
 fun MainScreen(field: Field,
                gameState: GameState,
                modifier: Modifier = Modifier,
-               onCellClick: (Int, Int) -> Unit = {_,_ -> },
-               onReset: () -> Unit = {}
+               onAction: ActionCallback = { }
                ) {
     Box(
         modifier = modifier
@@ -93,16 +107,16 @@ fun MainScreen(field: Field,
     ) {
         Title(modifier = Modifier.align(Alignment.TopCenter))
         Grid(field = field,
-            onCellClick = onCellClick,
+            onAction = onAction,
             modifier = Modifier.align(Alignment.Center))
         ResetButton(
             modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = onReset
+            onClick = { onAction(ResetAction) }
         )
         if (gameState != GameState.IN_PROGRESS) {
             WinBanner(gameState, modifier = Modifier
                 .align(Alignment.Center)
-                .clickable { onReset() }
+                .clickable { onAction(ResetAction) }
             )
         }
     }
@@ -156,7 +170,7 @@ fun ResetButton(
 
 @Composable
 fun Grid(field: Field,
-         onCellClick: (Int, Int) -> Unit = {_,_ -> },
+         onAction: ActionCallback = { },
     modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
@@ -169,7 +183,7 @@ fun Grid(field: Field,
             Row {
                 repeat(3) { iCol ->
                     Cell(field[ix(iRow, iCol)],
-                        onClick = { onCellClick(iRow, iCol) }
+                        onClick = { onAction(CellClickAction(iRow, iCol)) }
                         )
                 }
             }
@@ -208,7 +222,7 @@ fun GridPreview() {
     Grid("000_X_XX_".toField())
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true, locale = "uk")
+//@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true, locale = "uk")
 @Composable
 fun MainScreenPreviewUK() {
     MainScreen(
@@ -216,7 +230,9 @@ fun MainScreenPreviewUK() {
         gameState = GameState.CROSS_WIN)
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true)
+@Preview(showBackground = true, backgroundColor = 0xFFE0EECF, showSystemUi = true,
+    device = "spec:parent=pixel_5"
+)
 @Composable
 fun MainScreenPreview() {
     StateHolder()
